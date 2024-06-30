@@ -1,0 +1,5 @@
+# ignoring binaries
+main
+
+#ignoring temporary folders
+tmp/
