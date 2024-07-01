@@ -1,13 +1,14 @@
 package convertors
 
 import (
-	"faceit_parser/models"
+	repository_models "faceit_parser/internal/models/repository"
+	service_models "faceit_parser/internal/models/service"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func ConvertMatchStats(match models.MatchStatsRaw) models.MatchStats {
+func ConvertMatchStats(match repository_models.MatchStatsRaw) service_models.MatchStats {
 	kills, _ := strconv.ParseUint(match.Kills, 10, 8)
 	assists, _ := strconv.ParseUint(match.Assists, 10, 8)
 	deaths, _ := strconv.ParseUint(match.Deaths, 10, 8)
@@ -18,7 +19,7 @@ func ConvertMatchStats(match models.MatchStatsRaw) models.MatchStats {
 	left, _ := strconv.ParseUint(score[0], 10, 8)
 	right, _ := strconv.ParseUint(score[1], 10, 8)
 
-	return models.MatchStats{
+	return service_models.MatchStats{
 		CreatedAt: time.UnixMilli(match.CreatedAt),
 		Score:     [2]uint8{uint8(left), uint8(right)},
 		Map:       match.Map,

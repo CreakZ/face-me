@@ -1,4 +1,4 @@
-package models
+package service_models
 
 import "time"
 

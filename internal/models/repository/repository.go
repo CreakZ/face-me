@@ -1,4 +1,4 @@
-package models
+package repository_models
 
 type MatchStatsRaw struct {
 	CreatedAt int64  `json:"created_at"`
