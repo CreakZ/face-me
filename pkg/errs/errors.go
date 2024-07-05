@@ -1,26 +1,24 @@
 package custom_errors
 
 import (
-	"fmt"
+	"errors"
 )
 
-type errs struct {
-}
+var (
+	ErrNoMatches     = errors.New("no matches played")
+	ErrNotAllMatches = errors.New("info about certain matches failed to fetch due to external reasons")
+	ErrWrongNickname = errors.New("wrong nickname")
+)
 
-func InitErrs() errs {
-	return errs{}
-}
-
-type Errs interface {
-	NoMatches(game string) error
-	NotAllMatchesFetched(number int) error
-}
-
-func (e errs) NoMatches(game string) error {
-	return fmt.Errorf("no matches played in %v", game)
+func NoMatches() error {
+	return ErrNoMatches
 }
 
 // maybe no need in this function
-func (e errs) NotAllMatchesFetched(number int) error {
-	return fmt.Errorf("info about first %v matches failed to fetch due to external reasons", number)
+func NotAllMatchesFetched() error {
+	return ErrNotAllMatches
+}
+
+func WrongNickname() error {
+	return ErrWrongNickname
 }

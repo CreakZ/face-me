@@ -8,25 +8,31 @@ import (
 	"faceit_parser/pkg/timesort"
 	"log"
 	"sort"
+
+	"github.com/redis/go-redis/v9"
 )
 
 type service struct {
 	repo   repository.Repository
 	logger *log.Logger
+	cache  *redis.Client
 }
 
-func InitService(repo repository.Repository) service {
+func InitService(repo repository.Repository, logger *log.Logger, cache *redis.Client) service {
 	return service{
 		repo:   repo,
-		logger: log.Default(),
+		logger: logger,
+		cache:  cache,
 	}
 }
 
 type Service interface {
+	// pagination need to be done
+	// GetMatchesStats(context context.Context, nickname, game string, page, size int) ([]service_models.MatchStats, error)
 	GetAllMatchesStats(context context.Context, nickname, game string) ([]service_models.MatchStats, error)
-	GetMatchWithMostKills(ctx context.Context, matches []service_models.MatchStats) (service_models.MatchStats, error)
-	GetLongestMatch(ctx context.Context, matches []service_models.MatchStats) (service_models.MatchStats, error)
-	GetGlobalKD(ctx context.Context, matches []service_models.MatchStats) (float64, error)
+	GetMatchWithMostKills(ctx context.Context, sessionID string) (service_models.MatchStats, error)
+	GetLongestMatch(ctx context.Context, sessionID string) (service_models.MatchStats, error)
+	GetGlobalKD(ctx context.Context, sessionID string) (float64, error)
 }
 
 func (s service) GetAllMatchesStats(context context.Context, nickname, game string) ([]service_models.MatchStats, error) {
@@ -48,37 +54,16 @@ func (s service) GetAllMatchesStats(context context.Context, nickname, game stri
 	return matches, nil
 }
 
-func (s service) GetMatchWithMostKills(ctx context.Context, matches []service_models.MatchStats) (service_models.MatchStats, error) {
-	var thatMatch service_models.MatchStats
-	var kills uint8
-	for _, match := range matches {
-		if match.Kills > kills {
-			kills = match.Kills
-			thatMatch = match
-		}
-	}
-
-	return thatMatch, nil
+// TODO
+func (s service) GetMatchWithMostKills(ctx context.Context, sessionID string) (service_models.MatchStats, error) {
+	return service_models.MatchStats{}, nil
 }
 
-func (s service) GetLongestMatch(ctx context.Context, matches []service_models.MatchStats) (service_models.MatchStats, error) {
-	var thatMatch service_models.MatchStats
-	var roundsSum uint8
-	for _, match := range matches {
-		if match.Score[0]+match.Score[1] > roundsSum {
-			roundsSum = match.Score[0] + match.Score[1]
-			thatMatch = match
-		}
-	}
-
-	return thatMatch, nil
+// TODO
+func (s service) GetLongestMatch(ctx context.Context, sessionID string) (service_models.MatchStats, error) {
+	return service_models.MatchStats{}, nil
 }
 
-func (s service) GetGlobalKD(ctx context.Context, matches []service_models.MatchStats) (float64, error) {
-	var kdSum float64
-	for _, match := range matches {
-		kdSum += float64(match.Kills) / float64(match.Deaths)
-	}
-
-	return kdSum / float64(len(matches)), nil
+func (s service) GetGlobalKD(ctx context.Context, sessionID string) (float64, error) {
+	return 0.0, nil
 }

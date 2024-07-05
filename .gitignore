@@ -1,5 +1,8 @@
-# ignoring binaries
+# ignore binaries
 main
 
-#ignoring temporary folders
+# ignore temporary folders
 tmp/
+
+# ignore .env files
+.env
